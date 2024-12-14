@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dynamic Visualization - KKH Staff Suggestions Scheme</title>
+  <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+  <h1 style="text-align: center; font-size: 30px; font-weight: bold;">
+    Title: Unveiling Patterns of KKH Staff Suggestions Scheme (Bank de Idea)
+  </h1>
+  <p style="text-align: center; font-size: 25px;">
+    This visualization explores the trends, growth, and patterns of staff-submitted suggestions, categorized by 
+    type, status, and division. Insights into growth or decline over time (2014-2024) aim to provide a deeper understanding
+    of engagement levels and opportunities for improvement.
+  </p>
+</head>
+<body style="overflow-y: scroll;">
+
+    <h2>Chart 1: Ideas by Categories Over Time</h2>
+    <p style="text-align: left; font-size: 25px;">A dynamic bar chart visualizing the percentage distribution of ideas submitted under various categories 
+    (e.g., "Process Improvement," "Innovation") across different years. 
+    Each bar represents the proportion of ideas for a given category in a specific year.
+    <p style="text-align: left; font-size: 25px;">
+        Insights:
+        Early years emphasized "Facilities Improvement" and "IT Improvement', but over time as hospital infrastructre are more stable, 
+        the focus shifted to "Patient Safety" and "Patient Experience" as they are top prorities in healthcare. "Process Improvement" remained a critical driver, 
+        reflecting the organization's dedication to cultivating a culture of continuous growth.
+  </p>
+
+  <div id="chart-categories" style="width: 100%; height: 100vh;"></div>
+  <h2>Chart 2: Ideas by Status</h2>
+  <p style="text-align: left; font-size: 25px;">
+    A stacked bar chart that illustrates the yearly percentage of ideas accepted versus rejected. The total number of ideas for each year is displayed alongside the bars, while mouseover details reveal previous years' data.
+    <p style="text-align: left; font-size: 25px;">
+        Insights:
+    Acceptance rates show improvement from 2017 onwards, indicating a period of higher feasibility or alignment with organizational goals. 
+    As more Quality Improvement courses were introducted and improved the quality of the suggestions submitted.
+    However, the year on year decline of idea submission is alarming, with this findings, we have to relook into current activities in promoting 
+    staff engagement to boost the participation.
+    The data underscores the importance of maintaining transparent and supportive evaluation processes to sustain staff motivation and participation.
+  </p>
+  <div id="chart-status" style="width: 100%; height: 100vh; margin-top: 50px;"></div>
+  <h2 style="text-align: center; font-size: 24px; font-weight: bold; color: #333;">
+    Chart 3: Ideas by Division (<span style="color: #91cc75;">Growth-Green</span>/<span style="color: #ee6666;">Decline-Red</span>)
+  </h2>
+  <p style="text-align: left; font-size: 25px;">
+    An interactive treemap that showcases the total ideas submitted by various divisions, 
+    with color coding based on growth or decline compared to the previous year. 
+    The tooltip includes year-by-year data for detailed comparison.
+    <p style="text-align: left; font-size: 25px;">
+        Insights: "Div of Nsg" and "Div of SAS" contribute the highest volume of ideas about 51% and 24% respectively of the overall idea submission, reflecting their proactive engagement in the BdI program.
+    Divisions like "Div of Medicine" " Div of O&G" and "Div of PSS" show substantial growth, while "Div of Surgery" and "Div of Clinical Support Services" 
+    exhibit declines, indicating areas needing targeted support.
+    Growth and decline metrics highlight the dynamic nature of divisional contributions, potentially tied to leadership influence or operational changes.
+    This chart serves as a strategic tool for identifying high-performing divisions and areas requiring intervention, fostering a culture of continuous improvement across all teams.
+  <div id="chart-division" style="width: 100%; height: 100vh; margin-top: 50px;"></div>
+
+    <h2> Conclusion: </h2>
+    <p style="text-align: left; font-size: 25px;">
+This visualization suite provides an actionable framework for analyzing staff-submitted ideas, 
+guiding leadership in fostering a robust culture of innovation and improvement. By identifying trends, gaps, and opportunities for growth, 
+the organization can better align staff contributions with strategic objectives, ensuring sustained engagement and impact.
+  <script>
+
+    const updateFrequency = 2500;
+
+    const categoryColors = {
+      "Corporate Development": "#5470c6",
+      "Cost Management": "#91cc75",
+      "Environmental Sustainability": "#fac858",
+      "Facilities Improvement": "#ee6666",
+      "Innovation": "#73c0de",
+      "IT Improvement": "#3ba272",
+      "Patient Experience": "#ffc069",
+      "Patient Safety": "#ff9f7f",
+      "Non-Patient Related Risk and Safety Issues": "#fc8452",
+      "Organisational Efficiency": "#9a60b4",
+      "Others": "#ea7ccc",
+      "Process Improvement": "#d48265",
+      "Staff Satisfaction / Benefits": "#749f83",
+      "Training and Development": "#ca8622"
+    };
+
+    const dataCategories = [
+      ["Corporate Development", 2014, 2],
+      ["Corporate Development", 2015, 3],
+      ["Corporate Development", 2016, 1],
+      ["Corporate Development", 2017, 0],
+      ["Corporate Development", 2018, 0],
+      ["Corporate Development", 2019, 1],
+      ["Corporate Development", 2020, 0],
+      ["Corporate Development", 2021, 0],
+      ["Corporate Development", 2022, 0],
+      ["Corporate Development", 2023, 0],
+      ["Corporate Development", 2024, 0],
+      ["Cost Management", 2014, 6],
+      ["Cost Management", 2015, 5],
+      ["Cost Management", 2016, 2],
+      ["Cost Management", 2017, 0],
+      ["Cost Management", 2018, 0],
+      ["Cost Management", 2019, 0],
+      ["Cost Management", 2020, 0],
+      ["Cost Management", 2021, 0],
+      ["Cost Management", 2022, 0],
+      ["Cost Management", 2023, 0],
+      ["Cost Management", 2024, 0],
+      ["Environmental Sustainability", 2014, 10],
+      ["Environmental Sustainability", 2015, 10],
+      ["Environmental Sustainability", 2016, 7],
+      ["Environmental Sustainability", 2017, 4],
+      ["Environmental Sustainability", 2018, 5],
+      ["Environmental Sustainability", 2019, 5],
+      ["Environmental Sustainability", 2020, 3],
+      ["Environmental Sustainability", 2021, 3],
+      ["Environmental Sustainability", 2022, 4],
+      ["Environmental Sustainability", 2023, 3],
+      ["Environmental Sustainability", 2024, 6],
+      ["Facilities Improvement", 2014, 23],
+      ["Facilities Improvement", 2015, 21],
+      ["Facilities Improvement", 2016, 25],
+      ["Facilities Improvement", 2017, 11],
+      ["Facilities Improvement", 2018, 8],
+      ["Facilities Improvement", 2019, 10],
+      ["Facilities Improvement", 2020, 9],
+      ["Facilities Improvement", 2021, 12],
+      ["Facilities Improvement", 2022, 11],
+      ["Facilities Improvement", 2023, 15],
+      ["Facilities Improvement", 2024, 14],
+      ["Innovation", 2014, 0],
+      ["Innovation", 2015, 0],
+      ["Innovation", 2016, 1],
+      ["Innovation", 2017, 2],
+      ["Innovation", 2018, 2],
+      ["Innovation", 2019, 1],
+      ["Innovation", 2020, 2],
+      ["Innovation", 2021, 2],
+      ["Innovation", 2022, 2],
+      ["Innovation", 2023, 1],
+      ["Innovation", 2024, 2],
+      ["IT Improvement", 2014, 12],
+      ["IT Improvement", 2015, 13],
+      ["IT Improvement", 2016, 8],
+      ["IT Improvement", 2017, 4],
+      ["IT Improvement", 2018, 2],
+      ["IT Improvement", 2019, 4],
+      ["IT Improvement", 2020, 4],
+      ["IT Improvement", 2021, 3],
+      ["IT Improvement", 2022, 4],
+      ["IT Improvement", 2023, 2],
+      ["IT Improvement", 2024, 3],
+      ["Non-Patient Related Risk and Safety Issues", 2014, 17],
+      ["Non-Patient Related Risk and Safety Issues", 2015, 20],
+      ["Non-Patient Related Risk and Safety Issues", 2016, 9],
+      ["Non-Patient Related Risk and Safety Issues", 2017, 2],
+      ["Non-Patient Related Risk and Safety Issues", 2018, 1],
+      ["Non-Patient Related Risk and Safety Issues", 2019, 2],
+      ["Non-Patient Related Risk and Safety Issues", 2020, 3],
+      ["Non-Patient Related Risk and Safety Issues", 2021, 2],
+      ["Non-Patient Related Risk and Safety Issues", 2022, 2],
+      ["Non-Patient Related Risk and Safety Issues", 2023, 1],
+      ["Non-Patient Related Risk and Safety Issues", 2024, 2],
+      ["Organisational Efficiency", 2014, 0],
+      ["Organisational Efficiency", 2015, 0],
+      ["Organisational Efficiency", 2016, 4],
+      ["Organisational Efficiency", 2017, 3],
+      ["Organisational Efficiency", 2018, 3],
+      ["Organisational Efficiency", 2019, 3],
+      ["Organisational Efficiency", 2020, 2],
+      ["Organisational Efficiency", 2021, 3],
+      ["Organisational Efficiency", 2022, 3],
+      ["Organisational Efficiency", 2023, 3],
+      ["Organisational Efficiency", 2024, 3],
+      ["Others", 2014, 0],
+      ["Others", 2015, 0],
+      ["Others", 2016, 0],
+      ["Others", 2017, 0],
+      ["Others", 2018, 0],
+      ["Others", 2019, 5],
+      ["Others", 2020, 5],
+      ["Others", 2021, 6],
+      ["Others", 2022, 3],
+      ["Others", 2023, 5],
+      ["Others", 2024, 3],
+      ["Patient Experience", 2014, 6],
+      ["Patient Experience", 2015, 6],
+      ["Patient Experience", 2016, 9],
+      ["Patient Experience", 2017, 10],
+      ["Patient Experience", 2018, 10],
+      ["Patient Experience", 2019, 12],
+      ["Patient Experience", 2020, 10],
+      ["Patient Experience", 2021, 12],
+      ["Patient Experience", 2022, 14],
+      ["Patient Experience", 2023, 14],
+      ["Patient Experience", 2024, 13],
+      ["Patient Safety", 2014, 1],
+      ["Patient Safety", 2015, 2],
+      ["Patient Safety", 2016, 10],
+      ["Patient Safety", 2017, 21],
+      ["Patient Safety", 2018, 22],
+      ["Patient Safety", 2019, 17],
+      ["Patient Safety", 2020, 17],
+      ["Patient Safety", 2021, 13],
+      ["Patient Safety", 2022, 12],
+      ["Patient Safety", 2023, 12],
+      ["Patient Safety", 2024, 15],
+      ["Process Improvement", 2014, 18],
+      ["Process Improvement", 2015, 16],
+      ["Process Improvement", 2016, 16],
+      ["Process Improvement", 2017, 36],
+      ["Process Improvement", 2018, 41],
+      ["Process Improvement", 2019, 35],
+      ["Process Improvement", 2020, 37],
+      ["Process Improvement", 2021, 37],
+      ["Process Improvement", 2022, 34],
+      ["Process Improvement", 2023, 35],
+      ["Process Improvement", 2024, 34],
+      ["Staff Satisfaction / Benefits", 2014, 4],
+      ["Staff Satisfaction / Benefits", 2015, 4],
+      ["Staff Satisfaction / Benefits", 2016, 7],
+      ["Staff Satisfaction / Benefits", 2017, 7],
+      ["Staff Satisfaction / Benefits", 2018, 5],
+      ["Staff Satisfaction / Benefits", 2019, 6],
+      ["Staff Satisfaction / Benefits", 2020, 8],
+      ["Staff Satisfaction / Benefits", 2021, 6],
+      ["Staff Satisfaction / Benefits", 2022, 8],
+      ["Staff Satisfaction / Benefits", 2023, 7],
+      ["Staff Satisfaction / Benefits", 2024, 5],
+      ["Training and Development", 2014, 1],
+      ["Training and Development", 2015, 1],
+      ["Training and Development", 2016, 1],
+      ["Training and Development", 2017, 0],
+      ["Training and Development", 2018, 1],
+      ["Training and Development", 2019, 1],
+      ["Training and Development", 2020, 1],
+      ["Training and Development", 2021, 1],
+      ["Training and Development", 2022, 2],
+      ["Training and Development", 2023, 1],
+      ["Training and Development", 2024, 1]
+    ];
+
+const dataStatus = [
+["2014", 25, 75, 523],
+      ["2015", 25, 75, 779],
+      ["2016", 26, 74, 951],
+      ["2017", 51, 49, 950],
+      ["2018", 56, 44, 1000],
+      ["2019", 37, 63, 1286],
+      ["2020", 44, 56, 1802],
+      ["2021", 48, 52, 1514],
+      ["2022", 47, 53, 1130],
+      ["2023", 47, 53, 1382],
+      ["2024", 43, 57, 1597]
+    ];
+
+    const totalIdeas = {
+      "2014": 1597,
+      "2015": 1382,
+      "2016": 1130,
+      "2017": 1514,
+      "2018": 1802,
+      "2019": 1286,
+      "2020": 1000,
+      "2021": 950,
+      "2022": 951,
+      "2023": 779,
+      "2024": 523
+    };
+
+    const dataDivision = [
+      { name: "Div of AHS", value: 229 },
+      { name: "Div of Clinical Support Services", value: 188 },
+      { name: "Div of CMB", value: 90 },
+      { name: "Div of Corporate Development", value: 87 },
+      { name: "Div of Finance", value: 1431 },
+      { name: "Div of HR", value: 55 },
+      { name: "Div of Medicine", value: 169 },
+      { name: "Div of Nsg", value: 6618 },
+      { name: "Div of O&G", value: 59 },
+      { name: "Div of OSS", value: 388 },
+      { name: "Div of PSS", value: 237 },
+      { name: "Div of SAS", value: 3051 },
+      { name: "Div of Surgery", value: 94 },
+      { name: "COO", value: 214 }
+    ];
+
+    let currentYearIndex = 0;
+
+    
+    const chartCategoriesDom = document.getElementById('chart-categories');
+    const chartCategories = echarts.init(chartCategoriesDom);
+
+    const optionCategories = {
+      title: {
+        text: 'Ideas by Categories Over Time',
+        left: 'center',
+        textStyle: {
+          fontSize: 20,
+          fontWeight: 'bold'
+          
+        }
+      },
+      grid: {
+        top: 50,
+        bottom: 50,
+        left: 400,
+        right: 80
+      },
+      xAxis: {
+        type: 'value',
+        max: 40,
+        axisLabel: {
+            fontWeight: 'bold',
+            fontSize: 18,
+          formatter: '{value}%'
+        }
+      },
+      yAxis: {
+        type: 'category',
+        inverse: true,
+        axisLabel: {
+          show: true,
+          fontWeight: 'bold',
+          fontSize: 18
+        },
+        data: []
+      },
+      series: [
+        {
+          type: 'bar',
+          realtimeSort: true,
+          label: {
+            show: true,
+            position: 'right',
+            formatter: '{c}%'
+          },
+          itemStyle: {
+            color: function (params) {
+              return categoryColors[params.name] || '#5470c6';
+            }
+          },
+          data: []
+        }
+      ],
+      graphic: [
+        {
+          type: 'text',
+          left: 'center',
+          top: '50%',
+          style: {
+            text: '',
+            font: 'bolder 100px sans-serif',
+            fill: 'rgba(100, 100, 200, 0.25)'
+          }
+        },
+        {
+          type: 'text',
+          left: 'center',
+          top: '60%',
+          style: {
+            text: '',
+            font: '25px sans-serif',
+            fill: '#333'
+          }
+        }
+      ]
+    };
+
+    function updateChartCategories() {
+      const year = 2014 + currentYearIndex;
+      const filteredData = dataCategories
+        .filter(item => item[1] === year)
+        .map(item => ({ name: item[0], value: item[2] }));
+
+      const categories = filteredData.map(item => item.name);
+
+      optionCategories.yAxis.data = categories; 
+      optionCategories.series[0].data = filteredData; 
+      optionCategories.graphic[0].style.text = year; 
+      optionCategories.graphic[1].style.text = `Total Ideas: ${totalIdeas[year]}`; 
+
+      chartCategories.setOption(optionCategories);
+
+      currentYearIndex = (currentYearIndex + 1) % Object.keys(totalIdeas).length;
+    }
+
+    setInterval(updateChartCategories, updateFrequency);
+    updateChartCategories();
+
+    const chartStatusDom = document.getElementById('chart-status');
+    const chartStatus = echarts.init(chartStatusDom);
+
+    const optionStatus = {
+      title: {
+        text: 'Ideas by Status',
+        left: 'center',
+        textStyle: {
+          fontSize: 20,
+          fontWeight: 'bold'
+        }
+      },
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+          type: 'shadow'
+        }
+      },
+      legend: {
+        top: 30,
+        textStyle: {
+          fontSize: 18,
+          fontWeight: 'bold'
+        },
+        data: ['Accepted (%)', 'Rejected (%)']
+      },
+      grid: {
+        left: '3%',
+        right: '15%',
+        bottom: '10%',
+        containLabel: true
+      },
+      xAxis: {
+        type: 'value',
+        axisLabel: {
+          fontWeight: 'bold',
+          fontSize: 18,
+          formatter: '{value}%'
+        }
+      },
+      yAxis: {
+        type: 'category',
+        axisTick: {
+          show: false
+        },
+        axisLabel: {
+          fontWeight: 'bold',
+          fontSize: 18
+        },
+        data: dataStatus.map(item => item[0])
+      },
+      series: [
+        {
+          name: 'Accepted (%)',
+          type: 'bar',
+          stack: 'Total',
+          label: {
+            show: true,
+            position: 'inside',
+            formatter: '{c}%'
+          },
+          itemStyle: {
+            color: '#91cc75'
+          },
+          data: dataStatus.map(item => item[1])
+          
+        },
+        {
+          name: 'Rejected (%)',
+          type: 'bar',
+          stack: 'Total',
+          label: {
+            show: true,
+            position: 'inside',
+            formatter: '{c}%'
+          },
+          itemStyle: {
+            color: '#ee6666'
+          },
+          data: dataStatus.map(item => item[2]) // Rejected %
+        }
+      ],
+      graphic: dataStatus.map((item, index) => ({
+        type: 'text',
+        left: '86%',
+        top: `${9 + index * 7.5}%`,
+        style: {
+          text: `Total: ${item[3]}`,
+          font: 'bold 20px sans-serif',
+          fill: '#333'
+        }
+      }))
+    };
+
+    chartStatus.setOption(optionStatus);
+
+    const chartDivisionDom = document.getElementById('chart-division');
+const chartDivision = echarts.init(chartDivisionDom);
+
+const rawData = [
+  { year: 2014, data: [21, 18, 14, 3, 37, 203, 9, 7, 645, 12, 38, 39, 536, 15] },
+  { year: 2015, data: [14, 27, 19, 15, 14, 187, 10, 7, 496, 19, 35, 41, 480, 17] },
+  { year: 2016, data: [16, 28, 20, 7, 6, 192, 11, 24, 436, 6, 30, 29, 317, 8] },
+  { year: 2017, data: [25, 11, 12, 11, 9, 229, 3, 18, 820, 6, 27, 26, 306, 11] },
+  { year: 2018, data: [28, 33, 14, 11, 9, 136, 5, 10, 1156, 5, 18, 18, 337, 21] },
+  { year: 2019, data: [30, 42, 22, 8, 5, 132, 4, 19, 705, 0, 35, 14, 265, 4] },
+  { year: 2020, data: [9, 19, 12, 7, 2, 107, 3, 15, 599, 3, 40, 13, 165, 5] },
+  { year: 2021, data: [14, 17, 9, 13, 0, 93, 2, 13, 577, 0, 34, 9, 164, 5] },
+  { year: 2022, data: [14, 8, 19, 9, 3, 86, 3, 20, 511, 2, 59, 8, 206, 3] },
+  { year: 2023, data: [29, 19, 29, 5, 2, 62, 3, 13, 407, 2, 37, 1, 166, 4] },
+  { year: 2024, data: [14, 7, 18, 1, 0, 4, 2, 23, 266, 4, 35, 39, 109, 1] },
+];
+
+const divisions = [
+  "COO",
+  "Div of AHS",
+  "Div of Clinical Support Services",
+  "Div of CMB",
+  "Div of Corporate Development",
+  "Div of Finance",
+  "Div of HR",
+  "Div of Medicine",
+  "Div of Nsg",
+  "Div of O&G",
+  "Div of OSS",
+  "Div of PSS",
+  "Div of SAS",
+  "Div of Surgery",
+];
+
+const latestYearIndex = rawData.length - 1;
+const previousYearIndex = rawData.length - 2;
+
+const growthData = divisions.map((division, index) => {
+  const currentValue = rawData[latestYearIndex].data[index];
+  const previousValue = rawData[previousYearIndex].data[index];
+  const growth =
+    previousValue !== 0
+      ? (((currentValue - previousValue) / previousValue) * 100).toFixed(1)
+      : 0;
+
+  return {
+    name: division,
+    value: currentValue,
+    growth: parseFloat(growth),
+    previousYears: rawData.map(year => ({ year: year.year, value: year.data[index] }))
+  };
+});
+
+const optionDivision = {
+  title: {
+    text: 'Ideas by Division',
+    left: 'center',
+    textStyle: {
+      fontSize: 20,
+      fontWeight: 'bold'
+    }
+  },
+  tooltip: {
+    formatter: function (info) {
+      const value = info.value;
+      const growth = info.data.growth;
+      const previousYearsText = info.data.previousYears
+        .map(yearData => `${yearData.year}: ${yearData.value}`)
+        .join('<br>');
+      const growthText =
+        growth > 0
+          ? `Growth: +${growth}%`
+          : growth < 0
+          ? `Decline: ${growth}%`
+          : `No Change`;
+      return `
+        <div class="tooltip-title">${info.name}</div>
+        Total Ideas: ${value}<br>
+        ${growthText}<br>
+        <br><strong>Previous Years:</strong><br>${previousYearsText}`;
+    }
+  },
+  series: [
+    {
+      name: 'Division',
+      type: 'treemap',
+      label: {
+        show: true,
+        formatter: '{b}\n{c}',
+        fontSize: 14,
+        fontWeight: 'bold'
+      },
+      itemStyle: {
+        borderColor: '#fff',
+        borderWidth: 1
+      },
+      visualDimension: 1,
+      visualMin: -10,
+      visualMax: 10,
+      levels: [
+        {
+          itemStyle: {
+            borderWidth: 2,
+            gapWidth: 2
+          }
+        }
+      ],
+      data: growthData.map(item => ({
+        name: item.name,
+        value: item.value,
+        growth: item.growth,
+        previousYears: item.previousYears,
+        itemStyle: {
+          color: item.growth > 0 ? '#91cc75' : item.growth < 0 ? '#ee6666' : '#fac858'
+        }
+      }))
+    }
+  ]
+};
+
+chartDivision.setOption(optionDivision);
+    
+  </script>
+</body>
+</html>
